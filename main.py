@@ -26,11 +26,19 @@ if response.status_code == 200:
         }
         timetable.append(period_info)
 
-    for period in timetable:
-        print(f"Period {period['period']} ({period['time']}):")
-        for i, cls, in enumerate(period['classes']):
-            print(f"{headers[i + 2]}: {cls}")  # headers correspond to days of the week
-        print()
+    with open('timetable.txt', 'w', encoding='utf-8') as f:
+        for period in timetable:
+            # Write to external file time phases
+            f.write(f"Period {period['period']} ({period['time']}):\n")
+            # Simultaneously output info in console
+            print(f"Period {period['period']} ({period['time']}):")
+
+            for i, cls, in enumerate(period['classes']):
+                # Main info is recorded to file
+                f.write(f"{headers[i + 2]}: {cls}\n")
+                # Output in console
+                print(f"{headers[i + 2]}: {cls}")  # headers correspond to days of the week
+            f.write("\n")
 else:
     print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
