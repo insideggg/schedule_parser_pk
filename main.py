@@ -12,33 +12,31 @@ if response.status_code == 200:
 
     table = soup.find('table', {'class': 'tabela'})
 
-    headers = [header.get_text() for header in table.find_all('th')]
+    # skip first two headers ('Nr', 'Godz')
+    headers = [header.get_text() for header in table.find_all('th')[2:]]
 
     rows = table.find_all('tr')[1:]  # Skip the first header row
 
-    timetable = []
+    timetable = {day: [] for day in headers}
     for row in rows:
         cells = row.find_all('td')
-        period_info = {
-            'period': cells[0].get_text(),
-            'time': cells[1].get_text(),
-            'classes': [cell.get_text(strip=True) for cell in cells[2:]]  # MOnday to Friday
-        }
-        timetable.append(period_info)
+        period = cells[0].get_text()
+        time = cells[1].get_text()
+
+        for i, day in enumerate(headers):
+            timetable[day].append({
+                'period': period,
+                'time': time,
+                'class': cells[i + 2].get_text(strip=True) # i+2 because first subject cell starts from 3 column
+            })
 
     with open('timetable.txt', 'w', encoding='utf-8') as f:
-        for period in timetable:
-            # Write to external file time phases
-            f.write(f"Period {period['period']} ({period['time']}):\n")
-            # Simultaneously output info in console
-            print(f"Period {period['period']} ({period['time']}):")
-
-            for i, cls, in enumerate(period['classes']):
-                # Main info is recorded to file
-                f.write(f"{headers[i + 2]}: {cls}\n")
-                # Output in console
-                print(f"{headers[i + 2]}: {cls}")  # headers correspond to days of the week
+        for day, schedule in timetable.items():
+            f.write(f"{day}:\n")
+            for entry in schedule:
+                f.write(f"Period: {entry['period']} Time: {entry['time']}: Class: {entry['class']}\n")
             f.write("\n")
+    print("Schedule has been successfully written to timetable.txt!")
 else:
     print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
