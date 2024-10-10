@@ -7,6 +7,19 @@ url = 'https://podzial.mech.pk.edu.pl/stacjonarne/html/plany/o7.html'
 
 response = requests.get(url)
 
+def delete_unnecessary_stuff(class_info):
+    unnecessary_symbols = ["L05", "L01", "K01", "(K)"]
+    exceptional_symbols = ["L02", "K02"]
+
+    # deleting elements which including unnecessary elements / leave only those that are needed
+    if any(symbol in class_info for symbol in unnecessary_symbols):
+        if any(symbol in class_info for symbol in exceptional_symbols):
+            pass
+        else:
+            class_info = ""
+
+    return class_info
+
 
 def get_timetable():
     if response.status_code == 200:
@@ -32,19 +45,44 @@ def get_timetable():
                 class_name_N = ''
                 class_name_P = ''
 
+                # there is bug if -p comes first
                 if "-n" in class_info and "-p" in class_info:
                     class_parts = class_info.split("-n", 1)
-                    class_name_N = class_parts[0] + "-n"
-                    class_name_P = class_parts[1].split("-p", 1)[0] + "-p" if "-p" in class_parts[1] else ''
+                    if len(delete_unnecessary_stuff(class_info)) > 0:
+                        if len(delete_unnecessary_stuff(class_parts[0])) > 0:
+                            class_name_N = class_parts[0] + "-n"
+                        else:
+                            class_name_N = ""
+
+                        if len(delete_unnecessary_stuff(class_parts[1])) > 0:
+                            class_name_P = class_parts[1].split("-p", 1)[0] + "-p" if "-p" in class_parts[1] else ''
+                        else:
+                            class_name_P = ""
+                    else:
+                        class_name_N = ""
+                        class_name_P = ""
+
                 elif "-n" in class_info and "-p" not in class_info:
                     # lesson is only in (N) week
-                    class_name_N = class_info
+                    if len(delete_unnecessary_stuff(class_info)) > 0:
+                        class_name_N = class_info
+                    else:
+                        class_name_N = ""
+
                 elif "-n" not in class_info and "-p" in class_info:
                     # lesson is only in (P) week
-                    class_name_P = class_info
+                    if len(delete_unnecessary_stuff(class_info)) > 0:
+                        class_name_P = class_info
+                    else:
+                        class_name_P = ""
+
                 elif "-n" not in class_info and "-p" not in class_info:
-                    class_name_N = class_info
-                    class_name_P = class_info
+                    if len(delete_unnecessary_stuff(class_info)):
+                        class_name_N = class_info
+                        class_name_P = class_info
+                    else:
+                        class_name_N = ""
+                        class_name_P = ""
 
                 # simplify to make it possible read from android app
                 timetable[day].append([period, time, class_name_N, class_name_P])
