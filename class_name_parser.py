@@ -28,7 +28,7 @@ def extract_class_data(class_info):
     class_place = class_place.replace('-n', '').replace('-p', '')
 
     # If first letter is not in the allowed set, remove the first letter
-    allowed_letters = "ABCDEFGJHK"
+    allowed_letters = "ABCEFGJHK"
     if class_place[0] not in allowed_letters:
         class_place = class_place[1:]
 
@@ -37,6 +37,11 @@ def extract_class_data(class_info):
         class_name = "WF"
         class_type = "Ć"
         class_place = "Hala1"
+
+    if class_info.startswith("J angielski"):
+        class_name = "J angielski"
+        class_type = "W/Ć"
+        class_place = "A631a"
 
     return [class_name, class_type, class_place]
 
