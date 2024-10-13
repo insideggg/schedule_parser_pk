@@ -33,7 +33,7 @@ def extract_class_data(class_info):
         class_place = class_place[1:]
 
     # Special cases
-    if class_info == "WF (M) Ć w2 Hala1":
+    if class_info == "WF (M) Ćw2Hala1":
         class_name = "WF"
         class_type = "Ć"
         class_place = "Hala1"
