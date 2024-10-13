@@ -1,6 +1,3 @@
-import re
-
-
 def extract_class_data(class_info):
     # Split the input to separate class_name, class_type, and class_place
     class_info_parts = class_info.split(' ', 2)
