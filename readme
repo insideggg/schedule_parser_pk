@@ -5,9 +5,3 @@ It works only for 11K1 group
 You can set url with your schedule from the site of the PK
 
 exceptional_symbols are expected to be a student's group / other groups will be deleted from your pocket schedule
-
-PROBLEMS:
-1) Wprodofiz doesnt appears in list of subject in (P) week / only in (N)
-2) if in the class tuple in (N) part is "L05" or other exceptional symbols -> (P) deletes also and second part of tuple
-
-IDEA: return back to 1.04, and delete elements directly from 'timetable' with delete_unnecessary_stuff()
