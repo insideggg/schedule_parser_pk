@@ -2,6 +2,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+
 def resize_image(image_url, max_width, max_height):
     response = requests.get(image_url)
     response.raise_for_status()
