@@ -24,4 +24,4 @@ def resize_image(image_url, max_width, max_height):
             new_width = max_width
             new_height = int(new_width * aspect_ratio)
 
-    return new_width, new_height
+    return [new_width, new_height]
